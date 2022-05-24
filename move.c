@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   move.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bantunes <bantunes@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/04/27 12:23:40 by bantunes          #+#    #+#             */
+/*   Updated: 2022/05/02 17:41:51 by bantunes         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "so_long.h"
 
-void points(char ***map)
+void	points(char ***map)
 {
 	int		i;
 	int		j;
@@ -15,137 +27,113 @@ void points(char ***map)
 				(*img()).points++;
 		}
 	}
+	(*img()).end = 0;
 }
 
-int	move_up(char ***map)
+void	move_up(char ***map)
 {
-	int		i;
-	int		j;
-
-	i = -1;
-	while ((*map)[++i] != NULL)
+	if ((*map)[(*img()).x - 1][(*img()).y] != '1')
+		(*img()).moves++;
+	while ((*map)[(*img()).x - 1][(*img()).y] == '0' ||
+		((*map)[(*img()).x - 1][(*img()).y] == '2' &&
+		(*map)[(*img()).x - 1][(*img()).y] == '9'))
 	{
-		j = -1;
-		while ((*map)[i][++j] != '\0')
-		{
-			while (((*map)[i][j] == 'P' && (*map)[i - 1][j] == '0') || ((*map)[i][j] == 'P' && (*map)[i - 1][j] >= '2' && (*map)[i - 1][j] <= '5'))
-			{
-				(*map)[i][j] = '2';
-				(*map)[i - 1][j] = 'P';
-				i--;
-			}
-			if ((*map)[i][j] == 'P' && (*map)[i - 1][j] == 'C')
-			{
-				(*map)[i][j] = '2';
-				(*map)[i - 1][j] = 'P';
-				(*img()).points--;
-				i--;
-				i--;
-			}
-			if ((*map)[i][j] == 'P' && (*map)[i - 1][j] == 'E' && (*img()).points == 0 )
-			{
-				exit(1);
-			}
-		}
+		(*map)[(*img()).x][(*img()).y] = '2';
+		(*map)[(*img()).x - 1][(*img()).y] = 'P';
+		(*img()).x--;
 	}
-	return (0);
+	if (((*map)[(*img()).x - 1][(*img()).y] == 'E'
+		&& (*img()).points == 0) || (*map)[(*img()).x - 1][(*img()).y] == 'X')
+		you_end(map);
+	if ((*map)[(*img()).x - 1][(*img()).y] >= 'a'
+	&& (*map)[(*img()).x - 1][(*img()).y] <= 'z')
+		find_portals_up(map, -1);
+	if ((*map)[(*img()).x - 1][(*img()).y] == 'C')
+	{
+		(*map)[(*img()).x][(*img()).y] = '2';
+		(*map)[(*img()).x - 1][(*img()).y] = 'P';
+		(*img()).points--;
+		(*img()).x--;
+	}
 }
 
-int	move_left(char ***map)
+void	move_left(char ***map)
 {
-	int		i;
-	int		j;
-
-	i = -1;
-	while ((*map)[++i] != NULL)
+	if ((*map)[(*img()).x][(*img()).y - 1] != '1')
+		(*img()).moves++;
+	while ((*map)[(*img()).x][(*img()).y - 1] == '0'
+	|| ((*map)[(*img()).x][(*img()).y - 1] == '2' &&
+	(*map)[(*img()).x][(*img()).y - 1] == '9'))
 	{
-		j = -1;
-		while ((*map)[i][++j] != '\0')
-		{
-			while (((*map)[i][j] == 'P' && (*map)[i][j - 1] == '0') || ((*map)[i][j] == 'P' && (*map)[i][j - 1] >= '2' && (*map)[i][j - 1] <= '5'))
-			{
-				(*map)[i][j] = '2';
-				(*map)[i][j - 1] = 'P';
-				j--;
-			}
-			if ((*map)[i][j] == 'P' && (*map)[i][j - 1] == 'C')
-			{
-				(*map)[i][j] = '2';
-				(*map)[i][j - 1] = 'P';
-				(*img()).points--;
-				i--;
-			}
-			if ((*map)[i][j] == 'P' && (*map)[i][j - 1] == 'E' && (*img()).points == 0 )
-			{
-				exit(1);
-			}
-		}
+		(*map)[(*img()).x][(*img()).y] = '2';
+		(*map)[(*img()).x][(*img()).y - 1] = 'P';
+		(*img()).y--;
 	}
-	return (0);
+	if (((*map)[(*img()).x][(*img()).y - 1] == 'E'
+		&& (*img()).points == 0) || (*map)[(*img()).x][(*img()).y - 1] == 'X')
+		you_end(map);
+	if ((*map)[(*img()).x][(*img()).y - 1] >= 'a'
+	&& (*map)[(*img()).x][(*img()).y - 1] <= 'z')
+		find_portals_left(map, -1);
+	if ((*map)[(*img()).x][(*img()).y - 1] == 'C')
+	{
+		(*map)[(*img()).x][(*img()).y] = '2';
+		(*map)[(*img()).x][(*img()).y - 1] = 'P';
+		(*img()).points--;
+		(*img()).y--;
+	}
 }
 
-int	move_right(char ***map)
+void	move_right(char ***map)
 {
-	int		i;
-	int		j;
-
-	i = -1;
-	while ((*map)[++i] != NULL)
+	if ((*map)[(*img()).x][(*img()).y + 1] != '1')
+		(*img()).moves++;
+	while ((*map)[(*img()).x][(*img()).y + 1] == '0' ||
+	((*map)[(*img()).x][(*img()).y + 1] == '2' &&
+	(*map)[(*img()).x][(*img()).y + 1] == '9'))
 	{
-		j = -1;
-		while ((*map)[i][++j] != '\0')
-		{
-			while (((*map)[i][j] == 'P' && (*map)[i][j + 1] == '0') || ((*map)[i][j] == 'P' && (*map)[i][j + 1] >= '2' && (*map)[i][j + 1] <= '5'))
-			{
-				(*map)[i][j] = '2';
-				(*map)[i][j + 1] = 'P';
-				j++;
-			}
-			if ((*map)[i][j] == 'P' && (*map)[i][j + 1] == 'C')
-			{
-				(*map)[i][j] = '2';
-				(*map)[i][j + 1] = 'P';
-				(*img()).points--;
-				i--;
-			}
-			if ((*map)[i][j] == 'P' && (*map)[i][j + 1] == 'E' && (*img()).points == 0 )
-			{
-				exit(1);
-			}
-		}
+		(*map)[(*img()).x][(*img()).y] = '2';
+		(*map)[(*img()).x][(*img()).y + 1] = 'P';
+		(*img()).y++;
 	}
-	return (0);
+	if (((*map)[(*img()).x][(*img()).y + 1] == 'E' &&
+	(*img()).points == 0) || (*map)[(*img()).x][(*img()).y + 1] == 'X')
+		you_end(map);
+	if ((*map)[(*img()).x][(*img()).y + 1] >= 'a'
+	&& (*map)[(*img()).x][(*img()).y + 1] <= 'z')
+		find_portals_right(map, -1);
+	if ((*map)[(*img()).x][(*img()).y + 1] == 'C')
+	{
+		(*map)[(*img()).x][(*img()).y] = '2';
+		(*map)[(*img()).x][(*img()).y + 1] = 'P';
+		(*img()).points--;
+		(*img()).y++;
+	}
 }
 
-int	move_down(char ***map)
+void	move_down(char ***map)
 {
-	int		i;
-	int		j;
-
-	i = -1;
-	while ((*map)[++i] != NULL)
+	if ((*map)[(*img()).x + 1][(*img()).y] != '1')
+		(*img()).moves++;
+	while ((*map)[(*img()).x + 1][(*img()).y] == '0' ||
+	((*map)[(*img()).x + 1][(*img()).y] == '2' &&
+	(*map)[(*img()).x + 1][(*img()).y] == '9'))
 	{
-		j = -1;
-		while ((*map)[i][++j] != '\0')
-		{
-			while (((*map)[i][j] == 'P' && (*map)[i + 1][j] == '0') || ((*map)[i][j] == 'P' && (*map)[i + 1][j] >= '2' && (*map)[i + 1][j] <= '5'))
-			{
-				(*map)[i][j] = '2';
-				(*map)[i + 1][j] = 'P';
-				i++;
-			}
-			if ((*map)[i][j] == 'P' && (*map)[i + 1][j] == 'C')
-			{
-				(*map)[i][j] = '2';
-				(*map)[i + 1][j] = 'P';
-				(*img()).points--;
-				i--;
-			}
-			if ((*map)[i][j] == 'P' && (*map)[i + 1][j] == 'E' && (*img()).points == 0 )
-			{
-				exit(1);
-			}
-		}
+		(*map)[(*img()).x][(*img()).y] = '2';
+		(*map)[(*img()).x + 1][(*img()).y] = 'P';
+		(*img()).x++;
 	}
-	return (0);
+	if (((*map)[(*img()).x + 1][(*img()).y] == 'E' &&
+	(*img()).points == 0) || (*map)[(*img()).x + 1][(*img()).y] == 'X')
+		you_end(map);
+	if ((*map)[(*img()).x + 1][(*img()).y] >= 'a' &&
+	(*map)[(*img()).x + 1][(*img()).y] <= 'z')
+		find_portals_down(map, -1);
+	if ((*map)[(*img()).x + 1][(*img()).y] == 'C')
+	{
+		(*map)[(*img()).x][(*img()).y] = '2';
+		(*map)[(*img()).x + 1][(*img()).y] = 'P';
+		(*img()).points--;
+		(*img()).x++;
+	}
 }

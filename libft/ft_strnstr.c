@@ -1,29 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstclear.c                                      :+:      :+:    :+:   */
+/*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bantunes <bantunes@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/26 15:02:52 by bantunes          #+#    #+#             */
-/*   Updated: 2022/04/26 16:02:07 by bantunes         ###   ########.fr       */
+/*   Created: 2021/12/13 14:29:35 by bantunes          #+#    #+#             */
+/*   Updated: 2021/12/13 14:31:12 by bantunes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdio.h>
 
-void	ft_lstclear(t_list **lst, void (*del)(void *))
+char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
 {
-	t_list	*tmp;
+	char	*a;
+	size_t	n;
+	size_t	i;
+	size_t	j;
 
-	if (!*lst)
-		return ;
-	while (*lst)
+	a = (char *)haystack;
+	n = ft_strlen(needle);
+	if (!(n))
+		return (a);
+	if (ft_strlen(haystack) < n || len < n)
+		return (NULL);
+	i = 0;
+	while (a[i] && i <= len - n)
 	{
-		tmp = (*lst)->next;
-		ft_lstdelone(*lst, del);
-		*lst = tmp;
+		j = 0;
+		while (needle[j] && needle[j] == a[i + j])
+			j++;
+		if (j == n)
+			return (&a[i]);
+		i++;
 	}
-	*lst = 0;
+	return (NULL);
 }

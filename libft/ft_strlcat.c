@@ -1,29 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstclear.c                                      :+:      :+:    :+:   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bantunes <bantunes@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/26 15:02:52 by bantunes          #+#    #+#             */
-/*   Updated: 2022/04/26 16:02:07 by bantunes         ###   ########.fr       */
+/*   Created: 2021/12/13 14:29:05 by bantunes          #+#    #+#             */
+/*   Updated: 2021/12/13 14:31:35 by bantunes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdio.h>
 
-void	ft_lstclear(t_list **lst, void (*del)(void *))
+size_t	ft_strlcat(char *restrict dst, const char *restrict src, size_t dstsize)
 {
-	t_list	*tmp;
+	int	i;
+	int	n;
 
-	if (!*lst)
-		return ;
-	while (*lst)
+	i = 0;
+	n = ft_strlen(src);
+	while (*dst && dstsize > 0)
 	{
-		tmp = (*lst)->next;
-		ft_lstdelone(*lst, del);
-		*lst = tmp;
+		dst++;
+		i++;
+		dstsize--;
 	}
-	*lst = 0;
+	while (*src && dstsize > 1)
+	{
+		*dst++ = *src++;
+		dstsize--;
+	}
+	if (dstsize == 1 || *src == 0)
+		*dst = '\0';
+	return ((unsigned long)(n + i));
 }

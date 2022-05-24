@@ -6,7 +6,7 @@
 /*   By: bantunes <bantunes@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/13 14:26:07 by bantunes          #+#    #+#             */
-/*   Updated: 2022/03/18 12:59:31 by bantunes         ###   ########.fr       */
+/*   Updated: 2022/04/27 11:39:54 by bantunes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	*ft_lstadd_back(t_list **lst, t_list *new)
 	t_list	*tmp;
 
 	if (!new || !lst)
-		return(NULL);
+		return (NULL);
 	if (*lst)
 	{
 		tmp = *lst;
